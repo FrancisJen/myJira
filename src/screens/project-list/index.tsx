@@ -1,12 +1,13 @@
 import { SearchPanel } from "./search-panel";
 import { List } from "./list";
 import { useState } from "react";
-import { useDebounce, useMount } from "../../utils";
+import { useDebounce, useDocumentTitle, useMount } from "../../utils";
 import { useHttp } from "../../utils/http";
 import styled from "@emotion/styled";
 import { Typography } from "antd";
 import { useProjects } from "../../utils/project";
 import { useUsers } from "../../utils/user";
+import { Helmet } from "react-helmet";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 export const ProjectListScreen = () => {
@@ -17,6 +18,7 @@ export const ProjectListScreen = () => {
   const debouncedParam = useDebounce(param, 300);
   const { isLoading, error, data: list } = useProjects(debouncedParam);
   const { data: users } = useUsers();
+  useDocumentTitle("Project List", true);
 
   return (
     <Container>

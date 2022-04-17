@@ -23,6 +23,7 @@ export const RegisterScreen = ({
   }) => {
     if (cpassword !== values.password) {
       onError(new Error("password is not consistent"));
+      return;
     }
     try {
       await run(register(values));

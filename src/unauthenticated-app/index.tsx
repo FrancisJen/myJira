@@ -6,14 +6,25 @@ import styled from "@emotion/styled";
 import logo from "assets/logo.svg";
 import left from "assets/left.svg";
 import right from "assets/right.svg";
+import { Helmet } from "react-helmet";
+import { useDocumentTitle } from "../utils";
 
 export const UnauthenticatedApp = () => {
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  useDocumentTitle("Please Login to Continue");
+
   return (
     <Container>
-      <Background />
       <Header />
+      <Background />
+      <Button
+        onClick={() => {
+          throw new Error("click to throw error");
+        }}
+      >
+        throw exception
+      </Button>
       <ShadowCard>
         <Title>{isRegister ? "please register" : "please login"}</Title>
         {error ? (
