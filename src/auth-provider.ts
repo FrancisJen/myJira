@@ -1,16 +1,13 @@
-// 在真实环境中，如果用firebase，本文件不需要开发，直接用他们的sdk
-import { User } from "./screens/project-list/search-panel";
+// 在真实环境中，如果使用firebase这种第三方auth服务的话，本文件不需要开发者开发
+
+import { User } from "screens/project-list/search-panel";
+
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const localStorageKey = "__auth_provider_token__";
 
-interface account {
-  username: string;
-  password: string;
-}
-
 export const getToken = () => window.localStorage.getItem(localStorageKey);
-//tips 这里的{user} 其实是对response做了解构赋值
+
 export const handleUserResponse = ({ user }: { user: User }) => {
   window.localStorage.setItem(localStorageKey, user.token || "");
   return user;
@@ -27,7 +24,7 @@ export const login = (data: { username: string; password: string }) => {
     if (response.ok) {
       return handleUserResponse(await response.json());
     } else {
-      return Promise.reject(data);
+      return Promise.reject(await response.json());
     }
   });
 };
@@ -43,7 +40,7 @@ export const register = (data: { username: string; password: string }) => {
     if (response.ok) {
       return handleUserResponse(await response.json());
     } else {
-      return Promise.reject(data);
+      return Promise.reject(await response.json());
     }
   });
 };

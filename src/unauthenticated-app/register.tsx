@@ -2,19 +2,33 @@ import { FormEvent, useEffect } from "react";
 import { useAuth } from "../context/auth-context";
 import { Button, Form, Input } from "antd";
 import { LongButton } from "./index";
+import { useAsync } from "../utils/use-async";
 const apiUrl = process.env.REACT_APP_API_URL;
 
-export const RegisterScreen = () => {
+export const RegisterScreen = ({
+  onError,
+}: {
+  onError: (error: Error) => void;
+}) => {
   const { register, user } = useAuth();
+  const { run, isLoading } = useAsync(undefined, { throwError: true });
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const username = (event.currentTarget.elements[0] as HTMLInputElement)
-      .value;
-    const password = (event.currentTarget.elements[1] as HTMLInputElement)
-      .value;
-
-    register({ username, password });
+  const handleSubmit = async ({
+    cpassword,
+    ...values
+  }: {
+    username: string;
+    password: string;
+    cpassword: string;
+  }) => {
+    if (cpassword !== values.password) {
+      onError(new Error("password is not consistent"));
+    }
+    try {
+      await run(register(values));
+    } catch (e) {
+      onError(e as Error);
+    }
   };
 
   return (
@@ -30,6 +44,17 @@ export const RegisterScreen = () => {
         rules={[{ required: true, message: "pls input password" }]}
       >
         <Input placeholder={"password"} type="password" id={"password"}></Input>
+      </Form.Item>
+
+      <Form.Item
+        name={"cpassword"}
+        rules={[{ required: true, message: "pls confirm password" }]}
+      >
+        <Input
+          placeholder={"confirm password"}
+          type="password"
+          id={"cpassword"}
+        ></Input>
       </Form.Item>
 
       <Form.Item>
