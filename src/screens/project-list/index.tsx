@@ -8,6 +8,7 @@ import { Typography } from "antd";
 import { useProjects } from "../../utils/project";
 import { useUsers } from "../../utils/user";
 import { Helmet } from "react-helmet";
+import { TestClosure } from "./test-closure";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 export const ProjectListScreen = () => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const isFalsy = (value: any) => (value === 0 ? false : !value);
 export const isVoid = (value: unknown) =>
@@ -39,8 +39,10 @@ export const useDocumentTitle = (
   title: string,
   keepOnUnmount: boolean = true
 ) => {
-  const oldTitle = document.title;
+  const oldTitle = useRef(document.title).current;
 
+  // 页面加载时旧title
+  // 页面加载后新title
   useEffect(() => {
     document.title = title;
   }, [title]);
@@ -51,5 +53,5 @@ export const useDocumentTitle = (
         document.title = oldTitle;
       }
     };
-  });
+  }, [keepOnUnmount, oldTitle]);
 };

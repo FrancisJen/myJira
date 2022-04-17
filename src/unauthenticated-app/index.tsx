@@ -12,19 +12,12 @@ import { useDocumentTitle } from "../utils";
 export const UnauthenticatedApp = () => {
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  useDocumentTitle("Please Login to Continue");
+  // useDocumentTitle("Please Login to Continue");
 
   return (
     <Container>
       <Header />
       <Background />
-      <Button
-        onClick={() => {
-          throw new Error("click to throw error");
-        }}
-      >
-        throw exception
-      </Button>
       <ShadowCard>
         <Title>{isRegister ? "please register" : "please login"}</Title>
         {error ? (

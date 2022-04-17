@@ -4,7 +4,7 @@ import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
 
 import styled from "@emotion/styled";
 import { Row } from "./components/lib";
-import { Button, Dropdown, Menu } from "antd";
+import { Button, Dropdown, Menu, Typography } from "antd";
 
 export const AuthenticatedApp = () => {
   const { logout, user } = useAuth();
@@ -26,7 +26,9 @@ export const AuthenticatedApp = () => {
               <Menu>
                 <Menu.Item key="logout">
                   <Button type={"link"} onClick={logout}>
-                    logout
+                    <Typography.Text type={"success"} italic={true}>
+                      logout
+                    </Typography.Text>
                   </Button>
                 </Menu.Item>
               </Menu>
