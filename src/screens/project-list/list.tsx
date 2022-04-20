@@ -1,7 +1,9 @@
 import { User } from "./search-panel";
 import { Table, TableProps } from "antd";
 import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 
+//todo modify all id to number
 export interface Project {
   id: string;
   name: string;
@@ -25,6 +27,11 @@ export const List = ({ users, ...props }: ListProps) => {
           title: "ProjectName",
           dataIndex: "name",
           sorter: (a, b) => a.name.localeCompare(b.name),
+          render(value, project) {
+            return (
+              <Link to={`projects/${String(project.id)}`}>{project.name}</Link>
+            );
+          },
         },
         {
           title: "Department",
