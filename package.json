@@ -67,6 +67,7 @@
   },
   "devDependencies": {
     "@types/qs": "^6.9.7",
+    "@welldone-software/why-did-you-render": "^7.0.1",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
