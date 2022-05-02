@@ -56,3 +56,20 @@ export const useDocumentTitle = (
 };
 
 export const resetRoute = () => (window.location.href = window.location.origin);
+
+/**
+ * 返回组件的挂载状态，如果 还没挂载或者已经卸载，返回false
+ */
+export const useMountedRef = () => {
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    //tips 声明语句在使用方（父组件）刚开始执行（加载）时执行
+    mountedRef.current = true;
+    //返回的语句在使用方（父组件）结束（卸载）时执行
+    return () => {
+      mountedRef.current = false;
+    };
+  });
+  return mountedRef;
+};
