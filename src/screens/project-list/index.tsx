@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useDebounce, useDocumentTitle, useMount } from "../../utils";
 import { useHttp } from "../../utils/http";
 import styled from "@emotion/styled";
-import { Typography } from "antd";
+import { Button, Typography } from "antd";
 import { useProjects } from "../../utils/project";
 import { useUsers } from "../../utils/user";
 import { Helmet } from "react-helmet";
@@ -19,17 +19,23 @@ export const ProjectListScreen = () => {
 
   const [param, setParam] = useProjectsSearchParams();
   const debouncedParam = useDebounce(param, 200);
-  const { isLoading, error, data: list } = useProjects(debouncedParam);
+  const { isLoading, error, data: list, reload } = useProjects(debouncedParam);
   const { data: users } = useUsers();
 
   return (
     <Container>
       <h1> Project List </h1>
+      <Button onClick={reload}>reload</Button>
       <SearchPanel param={param} setParam={setParam} users={users || []} />
       {error ? (
         <Typography.Text type={"danger"}>{error.message}</Typography.Text>
       ) : null}
-      <List loading={isLoading} users={users || []} dataSource={list || []} />
+      <List
+        refresh={reload}
+        loading={isLoading}
+        users={users || []}
+        dataSource={list || []}
+      />
     </Container>
   );
 };
