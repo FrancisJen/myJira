@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useMountedRef } from "./index";
 
 interface State<D> {
@@ -33,49 +33,55 @@ export const useAsync = <D>(
   //useState直接传入函数的含义是：惰性初始化；所以，要用useState保存函数的话，就不能直接传入函数
   const [reload, setReload] = useState(() => () => {});
 
-  const setData = (data: D) =>
-    setState({
-      data,
-      stat: "success",
-      error: null,
-    });
+  const setData = useCallback(
+    (data: D) =>
+      setState({
+        data,
+        stat: "success",
+        error: null,
+      }),
+    []
+  );
 
-  const setError = (error: Error) =>
-    setState({
-      error,
-      stat: "error",
-      data: null,
-    });
+  const setError = useCallback(
+    (error: Error) =>
+      setState({
+        error,
+        stat: "error",
+        data: null,
+      }),
+    []
+  );
 
   //run用来触发异步请求
-  const run = (
-    promise: Promise<D>,
-    runConfig?: { reload: () => Promise<D> }
-  ) => {
-    if (!promise || !promise.then()) {
-      throw new Error("请传入Promise类型数据");
-    }
-    setReload(() => () => {
-      if (runConfig?.reload) {
-        run(runConfig?.reload(), runConfig);
+  const run = useCallback(
+    (promise: Promise<D>, runConfig?: { reload: () => Promise<D> }) => {
+      if (!promise || !promise.then()) {
+        throw new Error("请传入Promise类型数据");
       }
-      run(promise);
-    });
-    setState({ ...state, stat: "loading" });
-    return promise
-      .then((data) => {
-        if (mountedRef.current) {
-          setData(data);
+      setReload(() => () => {
+        if (runConfig?.reload) {
+          run(runConfig?.reload(), runConfig);
         }
-        return data;
-      })
-      .catch((error) => {
-        //catch会消化异常，不主动抛出，外面接受不到异常
-        setError(error);
-        if (config.throwError) return Promise.reject(error);
-        return error;
+        run(promise);
       });
-  };
+      setState((curState) => ({ ...curState, stat: "loading" }));
+      return promise
+        .then((data) => {
+          if (mountedRef.current) {
+            setData(data);
+          }
+          return data;
+        })
+        .catch((error) => {
+          //catch会消化异常，不主动抛出，外面接受不到异常
+          setError(error);
+          if (config.throwError) return Promise.reject(error);
+          return error;
+        });
+    },
+    [config.throwError, mountedRef, setData, setError]
+  );
 
   return {
     isIdle: state.stat === "idle",

@@ -1,6 +1,6 @@
 import { useAsync } from "./use-async";
 import { Project } from "../screens/project-list/list";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { cleanObject } from "./index";
 import { useHttp } from "./http";
 
@@ -8,13 +8,14 @@ export const useProjects = (param?: Partial<Project>) => {
   const client = useHttp();
   const { run, ...result } = useAsync<Project[]>();
 
-  const fetchProjects = () =>
-    client("projects", { data: cleanObject(param || {}) });
-
+  const fetchProjects = useCallback(
+    () => client("projects", { data: cleanObject(param || {}) }),
+    [client, param]
+  );
   //tips 数据初始化
   useEffect(() => {
     run(fetchProjects(), { reload: fetchProjects });
-  }, [param]);
+  }, [fetchProjects, param, run]);
   return result;
 };
 
