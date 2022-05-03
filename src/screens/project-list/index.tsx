@@ -11,10 +11,13 @@ import { Helmet } from "react-helmet";
 import { TestClosure } from "./test-closure";
 import { useUrlQueryParam } from "../../utils/url";
 import { useProjectsSearchParams } from "./util";
+import { Row } from "../../components/lib";
 
 //基本类型，可以放到依赖里；组件状态，可以放到依赖里；非组件状态的对象，不可以放到依赖里
 const apiUrl = process.env.REACT_APP_API_URL;
-export const ProjectListScreen = () => {
+export const ProjectListScreen = (props: {
+  setProjectModelOpen: (isOpen: boolean) => void;
+}) => {
   useDocumentTitle("Project List", true);
 
   const [param, setParam] = useProjectsSearchParams();
@@ -24,13 +27,18 @@ export const ProjectListScreen = () => {
 
   return (
     <Container>
-      <h1> Project List </h1>
-      <Button onClick={reload}>reload</Button>
+      <Row between={true}>
+        <h1> 项目列表 </h1>
+        <Button onClick={() => props.setProjectModelOpen(true)}>
+          创建项目
+        </Button>
+      </Row>
       <SearchPanel param={param} setParam={setParam} users={users || []} />
       {error ? (
         <Typography.Text type={"danger"}>{error.message}</Typography.Text>
       ) : null}
       <List
+        setProjectModelOpen={props.setProjectModelOpen}
         refresh={reload}
         loading={isLoading}
         users={users || []}

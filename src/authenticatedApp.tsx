@@ -2,66 +2,89 @@ import { ProjectListScreen } from "./screens/project-list";
 import { useAuth } from "./context/auth-context";
 import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
 import styled from "@emotion/styled";
-import { Row } from "./components/lib";
+import { ButtonNoPadding, Row } from "./components/lib";
 import { Button, Dropdown, Menu, Typography } from "antd";
 import { Routes, Route } from "react-router";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ProjectScreen } from "./screens/project";
 import { resetRoute } from "./utils";
+import { useState } from "react";
+import { ProjectModel } from "./screens/project-list/project-model";
+import { ProjectPopover } from "./components/project-popover";
 
 export const AuthenticatedApp = () => {
-  const value: any = undefined;
+  const [projectModelOpen, setProjectModelOpen] = useState(false);
   return (
     <Container>
-      <PageHeader />
+      <PageHeader setProjectModelOpen={setProjectModelOpen} />
       <Main>
         <Router>
           <Routes>
-            <Route path={"projects"} element={<ProjectListScreen />}></Route>
+            <Route
+              path={"/projects"}
+              element={
+                <ProjectListScreen setProjectModelOpen={setProjectModelOpen} />
+              }
+            ></Route>
             <Route
               path={"projects/:projectId/*"}
               element={<ProjectScreen />}
             ></Route>
-            <Route index element={<ProjectListScreen />}></Route>
-            <Route index element={<ProjectListScreen />} />
+            <Route
+              index
+              element={
+                <ProjectListScreen setProjectModelOpen={setProjectModelOpen} />
+              }
+            />
           </Routes>
         </Router>
       </Main>
+      <ProjectModel
+        projectModelOpen={projectModelOpen}
+        onClose={() => setProjectModelOpen(false)}
+      />
     </Container>
   );
 };
 
-const PageHeader = () => {
-  const { logout, user } = useAuth();
+const PageHeader = (props: {
+  setProjectModelOpen: (isOpen: boolean) => void;
+}) => {
   return (
     <Header between={true}>
       <HeaderLeft gap={true}>
-        <Button type={"link"} onClick={resetRoute}>
+        <ButtonNoPadding type={"link"} onClick={resetRoute}>
           <SoftwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
-        </Button>
-        <h2>user</h2>
-        <h2>project</h2>
+        </ButtonNoPadding>
+        <ProjectPopover setProjectModelOpen={props.setProjectModelOpen} />
+        <span>user</span>
+        <User />
       </HeaderLeft>
-      <HeaderRight>
-        <Dropdown
-          overlay={
-            <Menu>
-              <Menu.Item key="logout">
-                <Button type={"link"} onClick={logout}>
-                  <Typography.Text type={"success"} italic={true}>
-                    logout
-                  </Typography.Text>
-                </Button>
-              </Menu.Item>
-            </Menu>
-          }
-        >
-          <Button type={"link"} onClick={(e) => e.preventDefault()}>
-            Hi, {user?.name}
-          </Button>
-        </Dropdown>
-      </HeaderRight>
+      <HeaderRight></HeaderRight>
     </Header>
+  );
+};
+
+const User = () => {
+  const { logout, user } = useAuth();
+  return (
+    <Dropdown
+      overlay={
+        <Menu>
+          <Menu.Item key="logout">
+            <Button type={"link"} onClick={logout}>
+              <Typography.Text type={"success"} italic={true}>
+                logout
+              </Typography.Text>
+            </Button>
+          </Menu.Item>
+        </Menu>
+      }
+    >
+      <Button type={"link"} onClick={(e) => e.preventDefault()}>
+        Hi, {user?.name}
+      </Button>
+    </Dropdown>
   );
 };
 
