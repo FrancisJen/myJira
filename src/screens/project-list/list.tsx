@@ -19,7 +19,6 @@ export interface Project {
 interface ListProps extends TableProps<Project> {
   users: User[];
   refresh?: () => void;
-  setProjectModelOpen: (isOpen: boolean) => void;
 }
 
 export const List = ({ users, ...props }: ListProps) => {
@@ -90,12 +89,7 @@ export const List = ({ users, ...props }: ListProps) => {
                   </Menu>
                 }
               >
-                <ButtonNoPadding
-                  type={"link"}
-                  onClick={() => props.setProjectModelOpen(true)}
-                >
-                  编辑
-                </ButtonNoPadding>
+                <ButtonNoPadding type={"link"}>...</ButtonNoPadding>
               </Dropdown>
             );
           },

@@ -3,10 +3,10 @@ import { useProjects } from "../utils/project";
 import styled from "@emotion/styled";
 import twitter from "assets/icons8-twitter.svg";
 import { ButtonNoPadding } from "./lib";
+import { useProjectModal } from "../screens/project-list/util";
 
-export const ProjectPopover = (props: {
-  setProjectModelOpen: (isOpen: boolean) => void;
-}) => {
+export const ProjectPopover = () => {
+  const { open } = useProjectModal();
   const { data: projects, isLoading } = useProjects();
   console.log(projects);
   const pinnedProjects = projects?.filter((project) => project.pin);
@@ -25,10 +25,7 @@ export const ProjectPopover = (props: {
         ))}
       </List>
       <Divider />
-      <ButtonNoPadding
-        onClick={() => props.setProjectModelOpen(true)}
-        type={"link"}
-      >
+      <ButtonNoPadding onClick={open} type={"link"}>
         create project
       </ButtonNoPadding>
     </ContentContainer>

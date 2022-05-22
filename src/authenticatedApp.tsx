@@ -9,54 +9,38 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { ProjectScreen } from "./screens/project";
 import { resetRoute } from "./utils";
 import { useState } from "react";
-import { ProjectModel } from "./screens/project-list/project-model";
+import { ProjectModal } from "./screens/project-list/project-modal";
 import { ProjectPopover } from "./components/project-popover";
 
 export const AuthenticatedApp = () => {
-  const [projectModelOpen, setProjectModelOpen] = useState(false);
   return (
     <Container>
-      <PageHeader setProjectModelOpen={setProjectModelOpen} />
-      <Main>
-        <Router>
+      <Router>
+        <PageHeader />
+        <Main>
           <Routes>
-            <Route
-              path={"/projects"}
-              element={
-                <ProjectListScreen setProjectModelOpen={setProjectModelOpen} />
-              }
-            ></Route>
+            <Route path={"/projects"} element={<ProjectListScreen />}></Route>
             <Route
               path={"projects/:projectId/*"}
               element={<ProjectScreen />}
             ></Route>
-            <Route
-              index
-              element={
-                <ProjectListScreen setProjectModelOpen={setProjectModelOpen} />
-              }
-            />
+            <Route index element={<ProjectListScreen />} />
           </Routes>
-        </Router>
-      </Main>
-      <ProjectModel
-        projectModelOpen={projectModelOpen}
-        onClose={() => setProjectModelOpen(false)}
-      />
+        </Main>
+        <ProjectModal />
+      </Router>
     </Container>
   );
 };
 
-const PageHeader = (props: {
-  setProjectModelOpen: (isOpen: boolean) => void;
-}) => {
+const PageHeader = () => {
   return (
     <Header between={true}>
       <HeaderLeft gap={true}>
         <ButtonNoPadding type={"link"} onClick={resetRoute}>
           <SoftwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
         </ButtonNoPadding>
-        <ProjectPopover setProjectModelOpen={props.setProjectModelOpen} />
+        <ProjectPopover />
         <span>user</span>
         <User />
       </HeaderLeft>
