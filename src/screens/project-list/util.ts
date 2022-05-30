@@ -1,4 +1,4 @@
-import { useUrlQueryParam } from "../../utils/url";
+import { useSetUrlSearchParams, useUrlQueryParam } from "../../utils/url";
 import { set } from "husky";
 import { useMemo } from "react";
 import { useProject } from "../../utils/project";
@@ -23,7 +23,7 @@ export const useProjectModal = () => {
     "projectCreate",
   ]);
 
-  const [_, setUrlParams] = useSearchParams();
+  const setUrlParams = useSetUrlSearchParams();
   const [{ editingProjectId }, setEditingProjectId] = useUrlQueryParam([
     "editingProjectId",
   ]);
