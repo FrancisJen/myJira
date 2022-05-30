@@ -11,7 +11,7 @@ import { Helmet } from "react-helmet";
 import { TestClosure } from "./test-closure";
 import { useUrlQueryParam } from "../../utils/url";
 import { useProjectModal, useProjectsSearchParams } from "./util";
-import { ButtonNoPadding, Row } from "../../components/lib";
+import { ButtonNoPadding, ErrorBox, Row } from "../../components/lib";
 
 //基本类型，可以放到依赖里；组件状态，可以放到依赖里；非组件状态的对象，不可以放到依赖里
 const apiUrl = process.env.REACT_APP_API_URL;
@@ -22,27 +22,20 @@ export const ProjectListScreen = () => {
 
   const [param, setParam] = useProjectsSearchParams();
   const debouncedParam = useDebounce(param, 200);
-  const { isLoading, error, data: list, reload } = useProjects(debouncedParam);
+  const { isLoading, error, data: list } = useProjects(debouncedParam);
   const { data: users } = useUsers();
 
   return (
     <Container>
       <Row between={true}>
-        <h1> 项目列表 </h1>
+        <h1> Project List </h1>
         <ButtonNoPadding onClick={open} type={"link"}>
           create project
         </ButtonNoPadding>
       </Row>
       <SearchPanel param={param} setParam={setParam} users={users || []} />
-      {error ? (
-        <Typography.Text type={"danger"}>{error.message}</Typography.Text>
-      ) : null}
-      <List
-        refresh={reload}
-        loading={isLoading}
-        users={users || []}
-        dataSource={list || []}
-      />
+      <ErrorBox error={error} />
+      <List loading={isLoading} users={users || []} dataSource={list || []} />
     </Container>
   );
 };
