@@ -1,9 +1,9 @@
 import { QueryKey, useQueryClient } from "react-query";
 import { QueryKeys } from "react-query/types/devtools/styledComponents";
 import { projects } from "jira-dev-tool/dist/server/initial-data";
-import { Project } from "../screens/project-list/list";
 import { findAllByPlaceholderText } from "@testing-library/react";
 import { traceDeprecation } from "process";
+import { Project } from "../types/project";
 
 export const useConfig = (
   queryKey: QueryKey,
